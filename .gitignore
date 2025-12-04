@@ -1,1 +1,7 @@
 .aws-temp-creds.sh
+infrastructure/venv/
+infrastructure/cdk.out/
+lambda-layer/
+__pycache__/
+*.pyc
+.pytest_cache
