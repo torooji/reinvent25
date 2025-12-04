@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. Set up data models and DynamoDB tables
+- [x] 1. Set up data models and DynamoDB tables
   - Create Pydantic models for User, Registration, and extended Event
   - Define request/response models for API endpoints
   - Update CDK stack to provision Users and Registrations DynamoDB tables with appropriate keys and indexes
@@ -15,7 +15,7 @@
   - **Property 2: Event capacity and waitlist persistence**
   - **Validates: Requirements 2.1, 2.2**
 
-- [ ] 2. Implement user management endpoints
+- [x] 2. Implement user management endpoints
   - Create POST /users endpoint for user creation with validation
   - Create GET /users/{userId} endpoint for retrieving user details
   - Create GET /users endpoint for listing all users
@@ -27,7 +27,7 @@
   - **Property 23: Client errors return 4xx status codes**
   - **Validates: Requirements 10.3, 10.4**
 
-- [ ] 3. Implement core registration logic
+- [x] 3. Implement core registration logic
   - Create registration service function that checks capacity and creates registration records
   - Implement capacity constraint enforcement (registeredCount < capacity)
   - Implement atomic counter increment for registeredCount on successful registration
@@ -50,7 +50,7 @@
   - **Property 21: Registration increments count**
   - **Validates: Requirements 9.1**
 
-- [ ] 4. Implement waitlist functionality
+- [x] 4. Implement waitlist functionality
   - Add logic to detect when event is at capacity
   - Implement waitlist entry creation with position assignment
   - Create atomic position counter for waitlist ordering
@@ -86,7 +86,7 @@
   - **Property 12: Registration and waitlist mutual exclusivity**
   - **Validates: Requirements 5.5**
 
-- [ ] 5. Implement registration endpoint
+- [x] 5. Implement registration endpoint
   - Create POST /events/{eventId}/register endpoint
   - Wire up capacity checking and registration logic
   - Wire up waitlist logic for full events
@@ -94,7 +94,7 @@
   - Return appropriate status codes and response bodies
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.2, 5.1, 5.3_
 
-- [ ] 6. Implement unregistration logic and endpoint
+- [x] 6. Implement unregistration logic and endpoint
   - Create unregistration service function that removes registration records
   - Implement atomic counter decrement for registeredCount
   - Add waitlist promotion logic (find first waitlisted user, promote to registered)
@@ -115,7 +115,7 @@
   - **Property 15: Waitlist promotion on unregistration**
   - **Validates: Requirements 6.4, 6.5**
 
-- [ ] 7. Implement user registration query endpoints
+- [x] 7. Implement user registration query endpoints
   - Create GET /users/{userId}/registrations endpoint
   - Query Registrations table by userId with status="registered"
   - Fetch full event details for each registration
@@ -135,7 +135,7 @@
   - **Property 18: Registered events sorted by date**
   - **Validates: Requirements 7.5**
 
-- [ ] 8. Implement user waitlist query endpoints
+- [x] 8. Implement user waitlist query endpoints
   - Create GET /users/{userId}/waitlist endpoint
   - Query Registrations table by userId with status="waitlisted"
   - Fetch full event details and include position for each entry
@@ -150,7 +150,7 @@
   - **Property 20: Waitlist query includes position and event details**
   - **Validates: Requirements 8.2, 8.3**
 
-- [ ] 9. Implement event registration query endpoints
+- [x] 9. Implement event registration query endpoints
   - Create GET /events/{eventId}/registrations endpoint
   - Query Registrations table using GSI on eventId with status="registered"
   - Fetch user details for each registration
@@ -169,14 +169,14 @@
 - [ ] 11. Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 12. Update infrastructure deployment
+- [x] 12. Update infrastructure deployment
   - Deploy updated CDK stack with new DynamoDB tables
   - Verify table creation and indexes
   - Update environment variables for Lambda function
   - Test deployed endpoints with sample requests
   - _Requirements: All (deployment)_
 
-- [ ] 13. Update documentation
+- [-] 13. Update documentation
   - Update README.md with new API endpoints and examples
   - Document User and Registration schemas
   - Add usage examples for registration workflows

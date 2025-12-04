@@ -13,7 +13,7 @@ class BackendStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         
-        # DynamoDB Table
+        # DynamoDB Tables
         events_table = dynamodb.Table(
             self, "EventsTable",
             table_name="Events",
@@ -23,6 +23,45 @@ class BackendStack(Stack):
             ),
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
             removal_policy=RemovalPolicy.DESTROY
+        )
+        
+        users_table = dynamodb.Table(
+            self, "UsersTable",
+            table_name="Users",
+            partition_key=dynamodb.Attribute(
+                name="userId",
+                type=dynamodb.AttributeType.STRING
+            ),
+            billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
+            removal_policy=RemovalPolicy.DESTROY
+        )
+        
+        registrations_table = dynamodb.Table(
+            self, "RegistrationsTable",
+            table_name="Registrations",
+            partition_key=dynamodb.Attribute(
+                name="userId",
+                type=dynamodb.AttributeType.STRING
+            ),
+            sort_key=dynamodb.Attribute(
+                name="eventId",
+                type=dynamodb.AttributeType.STRING
+            ),
+            billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
+            removal_policy=RemovalPolicy.DESTROY
+        )
+        
+        # Add GSI for querying registrations by eventId
+        registrations_table.add_global_secondary_index(
+            index_name="eventId-index",
+            partition_key=dynamodb.Attribute(
+                name="eventId",
+                type=dynamodb.AttributeType.STRING
+            ),
+            sort_key=dynamodb.Attribute(
+                name="userId",
+                type=dynamodb.AttributeType.STRING
+            )
         )
         
         # Lambda Layer with dependencies
@@ -41,12 +80,16 @@ class BackendStack(Stack):
             layers=[deps_layer],
             timeout=Duration.seconds(30),
             environment={
-                "EVENTS_TABLE_NAME": events_table.table_name
+                "EVENTS_TABLE_NAME": events_table.table_name,
+                "USERS_TABLE_NAME": users_table.table_name,
+                "REGISTRATIONS_TABLE_NAME": registrations_table.table_name
             }
         )
         
         # Grant Lambda permissions to access DynamoDB
         events_table.grant_read_write_data(api_lambda)
+        users_table.grant_read_write_data(api_lambda)
+        registrations_table.grant_read_write_data(api_lambda)
         
         # API Gateway
         api = apigateway.LambdaRestApi(
