@@ -1,0 +1,32 @@
+{
+  "mcpServers": {
+    "aws-core": {
+      "command": "uvx",
+      "args": ["awslabs.core-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "aws-frontend": {
+      "command": "uvx",
+      "args": ["awslabs.frontend-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "aws-knowledge": {
+      "command": "uvx",
+      "args": ["mcp-server-fetch"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "MCP_FETCH_URL": "https://knowledge-mcp.global.api.aws"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
